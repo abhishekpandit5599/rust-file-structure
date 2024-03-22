@@ -3,6 +3,7 @@ use std::borrow::BorrowMut;
 use ic_stable_structures::memory_manager::{MemoryId, VirtualMemory};
 use ic_stable_structures::DefaultMemoryImpl;
 use ic_stable_structures::StableBTreeMap;
+use serde::{Deserialize, Serialize};
 
 use crate::init_file_contents;
 
@@ -11,7 +12,11 @@ const UPGRADES: MemoryId = MemoryId::new(0);
 const FILE_CONTENTS: MemoryId = MemoryId::new(1);
 
 pub type Memory = VirtualMemory<DefaultMemoryImpl>;
+#[derive(Serialize, Deserialize)]
 pub struct Example2 {
+    pub name : String,
+
+    #[serde(skip, default = "init_file_contents")]
     pub number: StableBTreeMap<u32, u32, Memory>,
 }
 
@@ -19,6 +24,7 @@ impl Example2 {
     pub fn new() -> Self {
         Self {
             number: init_file_contents(),
+            name: "TestExample".to_string()
         }
     }
 
@@ -28,6 +34,13 @@ impl Example2 {
     }
     pub fn whoami() -> String {
         return "I am Abhishek Sharma.".to_string();
+    }
+    pub fn set_name(&mut self,name:  String) -> String {
+        self.name = name;
+        return self.name.to_string();
+    }
+    pub fn get_name(&mut self) -> String {
+        return self.name.to_string();
     }
     pub fn increment(&mut self) -> u32 {
         let updated_number = self.number.get(&1);

@@ -3,12 +3,15 @@ service : {
   decrement_number2 : () -> (nat32);
   get_data : () -> (int32) query;
   get_data2 : () -> (nat32) query;
+  get_data_data2 : () -> (nat32) query;
+  get_name2 : () -> (text) query;
   get_number : () -> (int32) query;
   get_number2 : () -> (nat32) query;
   greet : () -> (text) query;
   increment_number : () -> (int32);
   increment_number2 : () -> (nat32);
   init : () -> (bool);
+  set_name2 : (text) -> (text);
   set_number : (int32) -> (int32);
   set_number2 : (nat32) -> (nat32);
 }

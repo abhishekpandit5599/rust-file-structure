@@ -1,10 +1,10 @@
-use crate::{memory, EXAMPLE_INSTANCE};
+use crate::{memory, EXAMPLE_INSTANCE2};
 use ic_stable_structures::{writer::Writer, Memory as _};
 
 pub fn pre_upgrade() {
     // Serialize the state.
     let mut state_bytes = vec![];
-    crate::with_state(|state| ciborium::ser::into_writer(&state.get_value(), &mut state_bytes))
+    crate::with_state2_without(|state| ciborium::ser::into_writer(state, &mut state_bytes))
         .expect("failed to encode state");
 
     // Write the length of the serialized bytes to memory, followed by the
@@ -30,9 +30,5 @@ pub fn post_upgrade() {
 
     // Deserialize and set the state.
     let state = ciborium::de::from_reader(&*state_bytes).expect("failed to decode state");
-    EXAMPLE_INSTANCE.with(|states| {
-        let mut example = states.lock().unwrap();
-        let data = example.set_value(state);
-        true
-    });
+    EXAMPLE_INSTANCE2.with(|s| *s.borrow_mut() = state);
 }
